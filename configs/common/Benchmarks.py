@@ -49,13 +49,13 @@ class SysConfig:
         if self.memsize:
             return self.memsize
         else:
-            return '128MB'
+            return '512MB'
 
     def disk(self):
         if self.diskname:
             return disk(self.diskname)
         elif buildEnv['TARGET_ISA'] == 'alpha':
-            return env.get('LINUX_IMAGE', disk('linux-latest.img'))
+            return env.get('LINUX_IMAGE', disk('linux-parsec-2-1-m5-with-test-inputs.img'))
         elif buildEnv['TARGET_ISA'] == 'x86':
             return env.get('LINUX_IMAGE', disk('x86root.img'))
         elif buildEnv['TARGET_ISA'] == 'arm':

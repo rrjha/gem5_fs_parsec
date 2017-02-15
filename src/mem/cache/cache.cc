@@ -56,6 +56,7 @@
 #include "base/misc.hh"
 #include "base/types.hh"
 #include "debug/Cache.hh"
+#include "debug/CacheAddrTrc.hh"
 #include "debug/CachePort.hh"
 #include "debug/CacheTags.hh"
 #include "debug/CacheVerbose.hh"
@@ -324,6 +325,12 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     DPRINTF(Cache, "%s %s\n", pkt->print(),
             blk ? "hit " + blk->print() : "miss");
 
+    char cmd_chr = (pkt->isRead() == 1)? 'R' : \
+                (pkt->isWrite() == 1)? 'W' : \
+                (pkt->isUpgrade() == 1)? 'U' : \
+                (pkt->isInvalidate() == 1)? 'I' : 'N';
+    if (blk != NULL)
+        DPRINTF(CacheAddrTrc, "Core-%u block=0x%X cmd=%c cmd_str=%s\n", id, tags->regenerateBlkAddr(blk->tag, blk->set), cmd_chr, pkt->cmdString());
 
     if (pkt->isEviction()) {
         // We check for presence of block in above caches before issuing
